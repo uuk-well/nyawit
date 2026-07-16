@@ -5,9 +5,3 @@
 [dev]
   command = "npm run dev"
   port = 3000
-
-[[plugins]]
-  package = "@netlify/next"
-
-[functions]
-  node_bundler = "esbuild"
