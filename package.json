@@ -20,6 +20,7 @@
     "recharts": "^3.9.2"
   },
   "devDependencies": {
+    "@netlify/next": "^1.4.9",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

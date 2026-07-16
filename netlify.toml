@@ -6,11 +6,8 @@
   command = "npm run dev"
   port = 3000
 
-[functions]
-  # Izinkan Next.js server functions berjalan di Netlify Edge/Node
-  node_bundler = "esbuild"
+[[plugins]]
+  package = "@netlify/next"
 
-[[redirects]]
-  from = "/api/auth/*"
-  to = "/.netlify/functions/next_api_auth/:splat"
-  status = 200
+[functions]
+  node_bundler = "esbuild"
