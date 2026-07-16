@@ -7,7 +7,7 @@ const PASSWORD = "nyawit123";
 async function main() {
   await initDb();
   try {
-    const res = await auth.api.signUpEmail({
+    const res = await auth().api.signUpEmail({
       body: { name: "Demo Petani", email: EMAIL, password: PASSWORD },
       headers: new Headers({
         origin: process.env.BETTER_AUTH_URL || "http://localhost:3000",
