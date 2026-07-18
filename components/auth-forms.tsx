@@ -38,8 +38,9 @@ export function AuthForms({ mode }: { mode: "login" | "signup" }) {
       }
       router.push("/dashboard");
       router.refresh();
-    } catch {
-      setError("Terjadi kesalahan. Coba lagi.");
+    } catch (e: any) {
+      const msg = e?.message || e?.toString?.() || "Terjadi kesalahan. Coba lagi.";
+      setError(msg);
       setLoading(false);
     }
   }
