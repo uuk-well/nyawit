@@ -108,10 +108,25 @@ export function initDb(): Promise<void> {
       for (const stmt of TABLES) {
         await client.execute(stmt);
       }
+      await migrate();
     })().catch((e) => {
       ready = null;
       throw e;
     });
   }
   return ready;
+}
+
+const MIGRATIONS: string[] = [
+  `ALTER TABLE "panen" ADD COLUMN "harga" real NOT NULL DEFAULT 0`,
+];
+
+async function migrate() {
+  for (const stmt of MIGRATIONS) {
+    try {
+      await client.execute(stmt);
+    } catch {
+      // kolom sudah ada, abaikan
+    }
+  }
 }
