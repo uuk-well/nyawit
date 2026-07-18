@@ -5,7 +5,6 @@ import { desc, eq } from "drizzle-orm";
 import { PanenForms, DeletePanenButton } from "./panen-forms";
 import { EmptyState } from "@/components/empty-state";
 import { formatAngka, formatRupiah, formatTanggal } from "@/lib/format";
-import { HARGA_TBS_PER_KG } from "@/lib/config";
 
 export default async function PanenPage() {
   const user = await requireUser();
@@ -26,7 +25,14 @@ export default async function PanenPage() {
     .orderBy(desc(panen.tanggal), desc(panen.createdAt));
 
   const totalBerat = rows.reduce((sum, r) => sum + (r.berat || 0), 0);
-  const estIncome = totalBerat * HARGA_TBS_PER_KG;
+  const estIncome = rows.reduce(
+    (sum, r) => sum + (r.berat || 0) * (r.harga || 0),
+    0,
+  );
+  const avgHarga =
+    rows.length > 0
+      ? rows.reduce((s, r) => s + (r.harga || 0), 0) / rows.length
+      : 0;
 
   return (
     <div className="space-y-6">
@@ -51,9 +57,9 @@ export default async function PanenPage() {
           </p>
         </div>
         <div className="rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm">
-          <p className="text-sm text-emerald-600">Harga TBS</p>
+          <p className="text-sm text-emerald-600">Rata-rata Harga TBS</p>
           <p className="text-xl font-bold text-emerald-900">
-            {formatRupiah(HARGA_TBS_PER_KG)}/kg
+            {formatRupiah(avgHarga)}/kg
           </p>
         </div>
       </div>
@@ -73,6 +79,7 @@ export default async function PanenPage() {
                 <th className="px-4 py-2 font-medium">Tanggal</th>
                 <th className="px-4 py-2 font-medium">Kebun</th>
                 <th className="px-4 py-2 text-right font-medium">Berat (kg)</th>
+                <th className="px-4 py-2 text-right font-medium">Harga (Rp/kg)</th>
                 <th className="px-4 py-2 text-right font-medium">Aksi</th>
               </tr>
             </thead>
@@ -88,6 +95,9 @@ export default async function PanenPage() {
                   <td className="px-4 py-2 text-right text-emerald-900">
                     {formatAngka(r.berat)}
                   </td>
+                  <td className="px-4 py-2 text-right text-emerald-900">
+                    {formatRupiah(r.harga || 0)}
+                  </td>
                   <td className="px-4 py-2">
                     <div className="flex justify-end gap-2">
                       <PanenForms
@@ -97,6 +107,7 @@ export default async function PanenPage() {
                           kebunId: r.kebunId,
                           tanggal: r.tanggal,
                           berat: r.berat,
+                          harga: r.harga,
                         }}
                       />
                       <DeletePanenButton id={r.id} />

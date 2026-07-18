@@ -68,6 +68,7 @@ const TABLES: string[] = [
     "kebunId" text NOT NULL,
     "tanggal" text NOT NULL,
     "berat" real NOT NULL,
+    "harga" real NOT NULL DEFAULT 0,
     "createdAt" integer NOT NULL
   )`,
   `CREATE TABLE IF NOT EXISTS "pengeluaran" (

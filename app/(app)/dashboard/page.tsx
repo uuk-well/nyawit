@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 import { StatCard } from "./stat-card";
 import { HarvestChart } from "./harvest-chart";
 import { NAMA_BULAN, formatAngka, formatRupiah, formatTanggal, hariIni } from "@/lib/format";
-import { HARGA_TBS_PER_KG } from "@/lib/config";
 import { Leaf, Wallet, Sprout, CalendarClock, TrendingUp } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -28,7 +27,10 @@ export default async function DashboardPage() {
     ]);
 
   const totalBerat = panenRows.reduce((s, r) => s + (r.berat || 0), 0);
-  const estIncome = totalBerat * HARGA_TBS_PER_KG;
+  const estIncome = panenRows.reduce(
+    (s, r) => s + (r.berat || 0) * (r.harga || 0),
+    0,
+  );
   const totalUpah = upahRows.reduce((s, r) => s + (r.nominal || 0), 0);
   const totalPengeluaran = pengeluaranRows.reduce(
     (s, r) => s + (r.nominal || 0),

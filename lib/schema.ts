@@ -61,6 +61,7 @@ export const panen = sqliteTable("panen", {
   kebunId: text("kebunId").notNull(),
   tanggal: text("tanggal").notNull(),
   berat: real("berat").notNull(),
+  harga: real("harga").notNull().default(0),
   createdAt: integer("createdAt").notNull(),
 });
 

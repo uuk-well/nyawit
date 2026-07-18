@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { panen } from "@/lib/schema";
 import { requireUser } from "@/lib/session";
+import { HARGA_TBS_PER_KG } from "@/lib/config";
 import type { ActionState } from "../kebun/actions";
 
 export async function createPanen(
@@ -19,11 +20,16 @@ export async function createPanen(
   const tanggal = String(formData.get("tanggal") || "");
   const beratRaw = String(formData.get("berat") || "").trim();
   const berat = Number(beratRaw);
+  const hargaRaw = String(formData.get("harga") || "").trim();
+  const harga = hargaRaw ? Number(hargaRaw) : HARGA_TBS_PER_KG;
 
   if (!kebunId) return { error: "Pilih kebun terlebih dahulu." };
   if (!tanggal) return { error: "Tanggal wajib diisi." };
   if (!beratRaw || Number.isNaN(berat) || berat <= 0) {
     return { error: "Berat harus berupa angka lebih dari 0." };
+  }
+  if (Number.isNaN(harga) || harga < 0) {
+    return { error: "Harga harus berupa angka tidak negatif." };
   }
 
   await db.insert(panen).values({
@@ -32,6 +38,7 @@ export async function createPanen(
     kebunId,
     tanggal,
     berat,
+    harga,
     createdAt: Date.now(),
   });
 
@@ -51,12 +58,17 @@ export async function updatePanen(
   const tanggal = String(formData.get("tanggal") || "");
   const beratRaw = String(formData.get("berat") || "").trim();
   const berat = Number(beratRaw);
+  const hargaRaw = String(formData.get("harga") || "").trim();
+  const harga = hargaRaw ? Number(hargaRaw) : HARGA_TBS_PER_KG;
 
   if (!id) return { error: "ID tidak valid." };
   if (!kebunId) return { error: "Pilih kebun terlebih dahulu." };
   if (!tanggal) return { error: "Tanggal wajib diisi." };
   if (!beratRaw || Number.isNaN(berat) || berat <= 0) {
     return { error: "Berat harus berupa angka lebih dari 0." };
+  }
+  if (Number.isNaN(harga) || harga < 0) {
+    return { error: "Harga harus berupa angka tidak negatif." };
   }
 
   const existing = await db
@@ -70,7 +82,7 @@ export async function updatePanen(
 
   await db
     .update(panen)
-    .set({ kebunId, tanggal, berat })
+    .set({ kebunId, tanggal, berat, harga })
     .where(eq(panen.id, id));
 
   revalidatePaths();

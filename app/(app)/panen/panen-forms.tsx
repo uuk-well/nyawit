@@ -13,6 +13,7 @@ type Item = {
   kebunId: string;
   tanggal: string;
   berat: number;
+  harga: number;
 };
 
 export function PanenForms({
@@ -96,7 +97,7 @@ export function PanenForms({
             className="w-full rounded-lg border border-emerald-200 bg-white px-3 py-2 text-emerald-900 outline-none focus:border-emerald-500"
           />
         </div>
-        <div>
+         <div>
           <label className="mb-1 block text-sm font-medium text-emerald-800">
             Berat (kg)
           </label>
@@ -109,6 +110,20 @@ export function PanenForms({
             defaultValue={item?.berat ?? ""}
             className="w-full rounded-lg border border-emerald-200 bg-white px-3 py-2 text-emerald-900 outline-none focus:border-emerald-500"
             placeholder="1200"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-emerald-800">
+            Harga TBS (Rp/kg)
+          </label>
+          <input
+            name="harga"
+            type="number"
+            step="1"
+            min="0"
+            defaultValue={item?.harga ?? ""}
+            className="w-full rounded-lg border border-emerald-200 bg-white px-3 py-2 text-emerald-900 outline-none focus:border-emerald-500"
+            placeholder="1500"
           />
         </div>
       </div>
