@@ -22,7 +22,18 @@ const options = {
     ...(process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : []),
   ],
   ...(process.env.NODE_ENV === "production"
-    ? { baseURL: process.env.BETTER_AUTH_URL || undefined, trustHost: true }
+    ? {
+        baseURL: process.env.BETTER_AUTH_URL || undefined,
+        trustHost: true,
+        allowedHosts: [
+          ...(process.env.NEXT_PUBLIC_BETTER_AUTH_URL
+            ? [new URL(process.env.NEXT_PUBLIC_BETTER_AUTH_URL).hostname]
+            : []),
+          ...(process.env.BETTER_AUTH_URL
+            ? [new URL(process.env.BETTER_AUTH_URL).hostname]
+            : []),
+        ],
+      }
     : {}),
 } satisfies Parameters<typeof betterAuth>[0];
 
